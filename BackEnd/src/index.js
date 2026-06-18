@@ -17,17 +17,30 @@ const leaderRoute = require("./routes/leaderRoutes");
 const router = require("./routes/flagRoutes");
 const eventTimerRoute = require("./routes/eventTimerRoute");
 
+const fileURLToPath=require('url');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // SPA Routing: Handle frontend routing by serving index.html for unknown routes
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 // });
 
-app.get('(.*)', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../FrontEnd/dist/index.html'));
+const frontEndBuildPath = path.join(__dirname, '../../FrontEnd/dist'); 
+
+// Serve the static assets from the production build directory
+app.use(express.static(frontEndBuildPath));
+
+// ✅ Uses RegExp literal to bypass path-to-regexp parser crashes completely
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(frontEndBuildPath, 'index.html'), (err) => {
+        if (err) {
+            console.error("❌ Failed to serve index.html:", err.message);
+            res.status(500).send("Frontend build files are missing or path is misconfigured inside the container.");
+        }
+    });
 });
 
 const allowedOrigins = [
