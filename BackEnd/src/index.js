@@ -17,7 +17,8 @@ const leaderRoute = require("./routes/leaderRoutes");
 const router = require("./routes/flagRoutes");
 const eventTimerRoute = require("./routes/eventTimerRoute");
 
-const frontEndBuildPath = path.join(__dirname, "../../FrontEnd/dist");
+
+const frontEndBuildPath = path.join(__dirname, "../public");
 
 app.use(express.static(frontEndBuildPath));
 
@@ -48,8 +49,8 @@ app.use(
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontEndBuildPath, "index.html"), (err) => {
         if (err) {
-            console.error("❌ Failed to serve index.html:", err.message);
-            res.status(500).send("Frontend build files are missing inside the container.");
+            console.error("Failed to serve index.html:", err.message);
+            res.status(500).send("Frontend build files are missing inside the container public folder.");
         }
     });
 });
