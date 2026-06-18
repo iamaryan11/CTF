@@ -22,15 +22,34 @@ const eventTimerRoute = require("./routes/eventTimerRoute");
 app.use(express.static(path.join(__dirname, 'public')));
 
 // SPA Routing: Handle frontend routing by serving index.html for unknown routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
+
+app.get('(.*)', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
+const allowedOrigins = [
+  "http://localhost:5173",       // For local development
+  "http://localhost:3000",       // Alternative local port
+  "https://ctf.shipflow.in",     // 🌐 Your secure production domain
+  "http://ctf.shipflow.in"       // Your non-secure production domain
+];
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "UPDATE"],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".shipflow.in")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Quick tip: "UPDATE" isn't a standard HTTP method, PUT/PATCH handles it!
     credentials: true,
   })
 );
