@@ -22,7 +22,7 @@ const frontEndBuildPath = path.join(__dirname, "../../FrontEnd/dist");
 app.use(express.static(frontEndBuildPath));
 
 
-// ✅ 4. Dynamic CORS Setup matching your production deployment
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://ctf.shipflow.in",
@@ -44,7 +44,7 @@ app.use(
   })
 );
 
-// ✅ 5. RegExp Literal route fallback (Safe from path-to-regexp parser crashes)
+
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontEndBuildPath, "index.html"), (err) => {
         if (err) {
@@ -103,7 +103,7 @@ const InitializeConnection = async () => {
   try {
     await Promise.all([master(), redisClient.connect()]);
     console.log(`both database connected succefully`);
-    app.listen(process.env.BE_PORT, () => {
+    app.listen(process.env.BE_PORT,'0.0.0.0', () => {
       console.log(`server listening at port: ${process.env.BE_PORT}`);
     });
   } catch (err) {
