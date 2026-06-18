@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Rubik+Glitch&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Orbitron:wght@400..900&family=Rubik+Glitch&display=swap');
+@import "tailwindcss";
+
+
+@plugin "daisyui" {
+  themes: --default;
+}
+
+
+@theme {
+  --font-glitch: "Rubik Glitch", system-ui, sans-serif;
+  --font-orbi: "Orbitron", sans-serif;
+}
+
+body {
+  cursor: url('/Red.png') 1 1, auto;
+}
+
+
+a,
+button,
+[role="button"] {
+
+
+  cursor: url('/Red.png') 1 1, pointer;
+}

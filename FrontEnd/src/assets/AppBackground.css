@@ -1,0 +1,33 @@
+.app-container {
+
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative;
+
+  overflow-x: hidden;
+}
+
+
+.content-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000;
+  color: white;
+
+
+  mask-image: radial-gradient(circle var(--spotlight-size) at var(--mouse-x) var(--mouse-y),
+      transparent -250%,
+      black 100%);
+  -webkit-mask-image: radial-gradient(circle var(--spotlight-size) at var(--mouse-x) var(--mouse-y),
+      transparent -250%,
+      black 100%);
+}
+
+
+.app-container {
+  --spotlight-size: 200px;
+}
