@@ -17,28 +17,38 @@ const leaderRoute = require("./routes/leaderRoutes");
 const router = require("./routes/flagRoutes");
 const eventTimerRoute = require("./routes/eventTimerRoute");
 
-const fileURLToPath=require('url');
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const frontEndBuildPath = path.join(__dirname, "../../FrontEnd/dist");
 
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// SPA Routing: Handle frontend routing by serving index.html for unknown routes
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
-
-const frontEndBuildPath = path.join(__dirname, '../../FrontEnd/dist'); 
-
-// Serve the static assets from the production build directory
 app.use(express.static(frontEndBuildPath));
 
-// ✅ Uses RegExp literal to bypass path-to-regexp parser crashes completely
+// ✅ 4. Dynamic CORS Setup matching your production deployment
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ctf.shipflow.in",
+  "http://ctf.shipflow.in"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".shipflow.in")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
+  })
+);
+
+
 app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(frontEndBuildPath, 'index.html'), (err) => {
+    res.sendFile(path.join(frontEndBuildPath, "index.html"), (err) => {
         if (err) {
             console.error("❌ Failed to serve index.html:", err.message);
-            res.status(500).send("Frontend build files are missing or path is misconfigured inside the container.");
+            res.status(500).send("Frontend build files are missing inside the container.");
         }
     });
 });
